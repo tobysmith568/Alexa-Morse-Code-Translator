@@ -1,8 +1,8 @@
 <?php
 
+include('../skill-ids.php');
 include('intent-request.php');
-
-$skillID = '';
+include('morse-code.php');
 
 $input = file_get_contents('php://input');
 $post = json_decode($input);
@@ -10,7 +10,7 @@ $post = json_decode($input);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	POST();
 }
-else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && $_SERVER['PUT_PASSWORD'] === PUT_PASSWORD) {
 	PUT();
 }
 else {
@@ -27,7 +27,7 @@ function POST() {
 
 	$SignatureCertChainUrl = $_SERVER['HTTP_SIGNATURECERTCHAINURL'];
 
-	if ($skillID == $post->session->application->applicationId AND $post->request->timestamp > date('Y-m-d\TH:i:s\Z', time()-150) AND preg_match('/https:\/\/s3\.amazonaws\.com(:433)?\/echo\.api\//', $SignatureCertChainUrl)) {
+	if (MORSE_CODE_SKILL_ID == $post->session->application->applicationId AND $post->request->timestamp > date('Y-m-d\TH:i:s\Z', time()-150) AND preg_match('/https:\/\/s3\.amazonaws\.com(:433)?\/echo\.api\//', $SignatureCertChainUrl)) {
 		$SignatureCertChainUrl_File = md5($SignatureCertChainUrl);
 		$SignatureCertChainUrl_File = $SignatureCertChainUrl_File . '.pem';
 		 
