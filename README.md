@@ -1,1 +1,1 @@
-Alexa-Custom-Skill-Template
+Alexa-Morse-Code-Translator
