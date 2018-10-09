@@ -90,6 +90,7 @@ class MorseCode {
 		return (new IntentRequestBuilder())
 			->addSSML($fullSSML)
 			->addSimpleCard($fullphrase, $fullContent)
+			->addShouldEndSession(false)
 			->build();
 	}
 	

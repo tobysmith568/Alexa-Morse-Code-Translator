@@ -49,4 +49,11 @@ class IntentRequestBuilder {
 		
 		return $this;
 	}
+	
+	public function addShouldEndSession($endSession) {
+		
+		$this->result->shouldEndSession = $endSession;
+		
+		return $this;
+	}
 }
