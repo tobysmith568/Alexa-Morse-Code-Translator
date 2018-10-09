@@ -45,6 +45,24 @@ class MorseCode {
 		'9' => '----.'
 	];
 	
+	public static $launchPhrases = [
+		0 => 'What can I translate into Morse code for you?',
+		1 => 'What would you like to translate?',
+		2 => 'What shall I translate?',
+		3 => 'What would you like translated?',
+		4 => 'What would you like to know in Morse Code?',
+		5 => 'What do you want translated?'
+	];
+	
+	public static $launchTranslations = [
+		0 => 'What is "pizza"?',
+		1 => 'Tell me what "aeroplane" is in Morse code.',
+		2 => 'Translate "school" into Morse code.',
+		3 => 'Translate "what is your name?"',
+		4 => 'What is "100" in Morse Code?',
+		5 => 'Tell me what "hello" is.'
+	];
+	
 	public static function IntentRequest($request){
 		$term = $request->intent->slots->term->value;
 		
@@ -63,14 +81,15 @@ class MorseCode {
 	}
 	
 	public static function LaunchRequest($request){
+		$fullphrase = self::$launchPhrases[array_rand(self::$launchPhrases)];		
+		$fullSSML = "<speak>$fullphrase</speak>";
 		
-		$fullSSML = '<speak>What can I translate into Morse code for you?</speak>';
-		$fullTitle = 'What can I translate into Morse code for you?';
-		$fullContent = 'eg, "What is pizza?"';
+		$content = self::$launchTranslations[array_rand(self::$launchTranslations)];	
+		$fullContent = "eg, \"$content\"";
 		
 		return (new IntentRequestBuilder())
 			->addSSML($fullSSML)
-			->addSimpleCard($fullTitle, $fullContent)
+			->addSimpleCard($fullphrase, $fullContent)
 			->build();
 	}
 	
