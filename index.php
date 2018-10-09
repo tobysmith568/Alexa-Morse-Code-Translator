@@ -77,7 +77,7 @@ function runRequest($request) {
 	
 	switch ($request->type) {
 		case 'LaunchRequest':
-		
+			$result->response = MorseCode::LaunchRequest($request);
 			break;
 		case 'IntentRequest':
 			$result->response = MorseCode::IntentRequest($request);

@@ -50,7 +50,7 @@ class MorseCode {
 		
 		$urlTerm = urlencode($term);
 		$url = "https://api.tobysmith.uk/alexa/morse-code/get-message/?text=$urlTerm";
-		$fullSSML = "<speak>In Morse Code, $term is: <audio src='$url' /></speak>";		
+		$fullSSML = "<speak>In Morse Code, $term is: <audio src='$url' /></speak>";
 		
 		$fullCode = self::getMorseCode($term);
 		
@@ -59,6 +59,18 @@ class MorseCode {
 		return (new IntentRequestBuilder())
 			->addSSML($fullSSML)
 			->addSimpleCard($fullContent, $fullCode)
+			->build();
+	}
+	
+	public static function LaunchRequest($request){
+		
+		$fullSSML = '<speak>What can I translate into Morse code for you?</speak>';
+		$fullTitle = 'What can I translate into Morse code for you?';
+		$fullContent = 'eg, "What is pizza?"';
+		
+		return (new IntentRequestBuilder())
+			->addSSML($fullSSML)
+			->addSimpleCard($fullTitle, $fullContent)
 			->build();
 	}
 	
