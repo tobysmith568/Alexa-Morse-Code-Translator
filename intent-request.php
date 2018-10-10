@@ -50,10 +50,51 @@ class IntentRequestBuilder {
 		return $this;
 	}
 	
-	public function addShouldEndSession($endSession) {
+	public function addStandardCard($title, $text, $smallImage, $largeImage) {
+		$card = new stdclass();
 		
+		$card->type = 'Standard';
+		$card->title = $title;
+		
+		$card->text = $text;
+		
+		$card->image = $this::getImage($smallImage, $largeImage);
+		
+		$this->result->card = $card;
+		
+		return $this;
+	}
+	
+	public function addShouldEndSession($endSession) {		
 		$this->result->shouldEndSession = $endSession;
 		
 		return $this;
 	}
+	
+	private function getImage($smallImage, $largeImage) {
+		$result = new stdclass();
+		$result->smallImageUrl = $smallImage;
+		$result->largeImageUrl = $largeImage;
+		
+		return $result;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
