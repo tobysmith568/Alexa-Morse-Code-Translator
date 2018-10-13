@@ -63,7 +63,34 @@ class MorseCode {
 		5 => 'Tell me what "hello" is.'
 	];
 	
+	public static function LaunchRequest($request){
+		$fullphrase = self::$launchPhrases[array_rand(self::$launchPhrases)];		
+		$fullSSML = "<speak>$fullphrase</speak>";
+		
+		$content = self::$launchTranslations[array_rand(self::$launchTranslations)];	
+		$fullContent = "eg, \"$content\"";
+		
+		return (new IntentRequestBuilder())
+			->addSSML($fullSSML)
+			->addSimpleCard($fullphrase, $fullContent)
+			->addShouldEndSession(false)
+			->build();
+	}
+	
 	public static function IntentRequest($request){
+		switch ($request->intent->name) {
+			case 'GetCode':
+				return self::GetTranslationIntent($request);
+				
+			case 'AMAZON.StopIntent':
+				return self::GetStopIntent();
+				
+			default:
+				return self::GetUnknownIntent();
+		}
+	}
+	
+	private static function GetTranslationIntent($request) {
 		$term = $request->intent->slots->term->value;
 		
 		$urlTerm = urlencode($term);
@@ -80,16 +107,16 @@ class MorseCode {
 			->build();
 	}
 	
-	public static function LaunchRequest($request){
-		$fullphrase = self::$launchPhrases[array_rand(self::$launchPhrases)];		
-		$fullSSML = "<speak>$fullphrase</speak>";
-		
-		$content = self::$launchTranslations[array_rand(self::$launchTranslations)];	
-		$fullContent = "eg, \"$content\"";
-		
+	private static function GetStopIntent() {
 		return (new IntentRequestBuilder())
-			->addSSML($fullSSML)
-			->addSimpleCard($fullphrase, $fullContent)
+			->addSSML('<speak><prosody rate="x-slow"><prosody volume="x-loud"><prosody pitch="x-high"><phoneme alphabet="ipa" ph="baɪ">Bye!</phoneme></prosody></prosody></prosody></speak>')
+			->addShouldEndSession(true)
+			->build();
+	}
+	
+	private static function GetUnknownIntent() {
+		return (new IntentRequestBuilder())
+			->addSSML("<speak>I'm sory, I don't know how to handle that request.</speak>")
 			->addShouldEndSession(false)
 			->build();
 	}

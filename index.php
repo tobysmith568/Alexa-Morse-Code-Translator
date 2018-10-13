@@ -10,7 +10,7 @@ $post = json_decode($input);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	POST();
 }
-else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && $_SERVER['PUT_PASSWORD'] === PUT_PASSWORD) {
+else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && $_SERVER['HTTP_PUT_PASSWORD'] === PUT_PASSWORD) {
 	PUT();
 }
 else {
