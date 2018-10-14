@@ -85,6 +85,9 @@ class MorseCode {
 			case 'AMAZON.StopIntent':
 				return self::GetStopIntent();
 				
+			case 'AMAZON.HelpIntent':
+				return self::GetHelpIntent();
+				
 			default:
 				return self::GetUnknownIntent();
 		}
@@ -104,6 +107,13 @@ class MorseCode {
 		return (new IntentRequestBuilder())
 			->addSSML($fullSSML)
 			->addSimpleCard($fullContent, $fullCode)
+			->build();
+	}
+	
+	private static function GetStopIntent() {
+		return (new IntentRequestBuilder())
+			->addSSML('<speak><prosody rate="x-slow"><prosody volume="x-loud"><prosody pitch="x-high"><phoneme alphabet="ipa" ph="baɪ">Bye!</phoneme></prosody></prosody></prosody></speak>')
+			->addShouldEndSession(true)
 			->build();
 	}
 	

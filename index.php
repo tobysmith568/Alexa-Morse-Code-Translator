@@ -3,6 +3,7 @@
 include('../skill-ids.php');
 include('intent-request.php');
 include('morse-code.php');
+include('ssml-helper.php');
 
 $input = file_get_contents('php://input');
 $post = json_decode($input);
