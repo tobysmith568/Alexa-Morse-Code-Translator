@@ -65,7 +65,7 @@ class MorseCode {
 	
 	public static function LaunchRequest($request){
 		$fullphrase = self::$launchPhrases[array_rand(self::$launchPhrases)];		
-		$fullSSML = "<speak>$fullphrase</speak>";
+		$fullSSML = SSML::Speak($fullphrase);
 		
 		$content = self::$launchTranslations[array_rand(self::$launchTranslations)];	
 		$fullContent = "eg, \"$content\"";
@@ -77,10 +77,10 @@ class MorseCode {
 			->build();
 	}
 	
-	public static function IntentRequest($request){
-		switch ($request->intent->name) {
+	public static function IntentRequest($post){
+		switch ($post->request->intent->name) {
 			case 'GetCode':
-				return self::GetTranslationIntent($request);
+				return self::GetTranslationIntent($post);
 				
 			case 'AMAZON.StopIntent':
 				return self::GetStopIntent();
@@ -93,12 +93,12 @@ class MorseCode {
 		}
 	}
 	
-	private static function GetTranslationIntent($request) {
-		$term = $request->intent->slots->term->value;
+	private static function GetTranslationIntent($post) {
+		$term = $post->request->intent->slots->term->value;
 		
 		$urlTerm = urlencode($term);
 		$url = "https://api.tobysmith.uk/alexa/morse-code/get-message/?text=$urlTerm";
-		$fullSSML = "<speak>In Morse Code, $term is: <audio src='$url' /></speak>";
+		$fullSSML = SSML::Speak("In Morse Code, $term is:" . SSML::Audio($url));
 		
 		$fullCode = self::getMorseCode($term);
 		
@@ -107,26 +107,31 @@ class MorseCode {
 		return (new IntentRequestBuilder())
 			->addSSML($fullSSML)
 			->addSimpleCard($fullContent, $fullCode)
+			->addShouldEndSession(!$post->session->attributes->launched)
 			->build();
 	}
 	
 	private static function GetStopIntent() {
 		return (new IntentRequestBuilder())
-			->addSSML('<speak><prosody rate="x-slow"><prosody volume="x-loud"><prosody pitch="x-high"><phoneme alphabet="ipa" ph="baɪ">Bye!</phoneme></prosody></prosody></prosody></speak>')
+			->addSSML(SSML::Speak(
+					  SSML::LowRate(
+					  SSML::HighVolume(
+					  SSML::HighPitched(
+					  SSML::Phoneme('baɪ', 'Bye!'))))))
 			->addShouldEndSession(true)
 			->build();
 	}
 	
-	private static function GetStopIntent() {
+	private static function GetHelpIntent() {
 		return (new IntentRequestBuilder())
 			->addSSML('<speak><prosody rate="x-slow"><prosody volume="x-loud"><prosody pitch="x-high"><phoneme alphabet="ipa" ph="baɪ">Bye!</phoneme></prosody></prosody></prosody></speak>')
-			->addShouldEndSession(true)
+			->addShouldEndSession(false)
 			->build();
 	}
 	
 	private static function GetUnknownIntent() {
 		return (new IntentRequestBuilder())
-			->addSSML("<speak>I'm sory, I don't know how to handle that request.</speak>")
+			->addSSML(SSML::Speak("I'm sory, I don't know how to handle that request."))
 			->addShouldEndSession(false)
 			->build();
 	}

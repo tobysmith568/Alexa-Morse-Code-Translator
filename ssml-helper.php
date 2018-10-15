@@ -7,65 +7,66 @@ if (str_replace('/', '\\', __FILE__) == str_replace('/', '\\', $_SERVER['SCRIPT_
 
 class SSML {
 	
-	public function __construct() {
-	}
-	
-	public function Speak($args) {
+	public static function Speak($args) {
 		$args = self::Stringify($args);
 		return "<speak>$args</speak>";
 	}
 	
-	public function Audio($source) {
+	public static function Audio($source) {
 		return "<audio src=\"$source\"/>";
 	}
 	
-	public function HighRate($args) {
+	public static function HighRate($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'rate="x-fast"');
+		return self::Prosody($args, 'rate="x-fast"');
 	}
 	
-	public function LowRate($args) {
+	public static function LowRate($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'rate="x-slow"');
+		return self::Prosody($args, 'rate="x-slow"');
 	}
 	
-	public function HighPitched($args) {
+	public static function HighPitched($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'pitch="x-high"');
+		return self::Prosody($args, 'pitch="x-high"');
 	}
 	
-	public function LowPitched($args) {
+	public static function LowPitched($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'pitch="x-low"');
+		return self::Prosody($args, 'pitch="x-low"');
 	}
 	
-	public function HighVolume($args) {
+	public static function HighVolume($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'volume="x-loud"');
+		return self::Prosody($args, 'volume="x-loud"');
 	}
 	
-	public function LowVolume($args) {
+	public static function LowVolume($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'volume="silent"');
+		return self::Prosody($args, 'volume="silent"');
 	}
 	
-	public function Interjection($args) {
+	public static function Interjection($args) {
 		$args = self::Stringify($args);
-		return Prosody($args, 'interjection');
+		return self::Prosody($args, 'interjection');
 	}
 	
-	private function SayAs($string, $term, $format = null) {
-		if ($format === null) {
+	public static function Phoneme($sounds, $text) {
+		return "<phoneme alphabet=\"ipa\" ph=\"$sounds\">$text</phoneme>";
+	}
+	
+	private static function SayAs($string, $term, $format = null) {
+		if ($format === null)
 			return "<say-as interpret-as=\"$term\">$string</prosody>";
 		
 		return "<say-as interpret-as=\"$term\" format=\"$format\">$string</prosody>";		
 	}
 	
-	private function Prosody($string, $term) {
+	private static function Prosody($string, $term) {
 		return "<prosody $term>$string</prosody>";
 	}
 	
-	private function Stringify($args) {
+	private static function Stringify($args) {
 		if (is_array($args))
 			$args = implode('', $args);
 		

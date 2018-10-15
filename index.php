@@ -66,24 +66,28 @@ function POST() {
 function PUT() {
 	global $post;
 	header ('Content-Type: application/json');
-	echo json_encode(runRequest($post->request), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+	echo json_encode(runRequest($post), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 }
 
 ///////////////////
 
-function runRequest($request) {	
+function runRequest($post) {
 	$result = new stdclass();
 	
 	$result->version = '1.0';
 	
-	switch ($request->type) {
+	switch ($post->request->type) {
 		case 'LaunchRequest':
-			$result->response = MorseCode::LaunchRequest($request);
+			$result->response = MorseCode::LaunchRequest($post);
+			$result->sessionAttributes->launched = true;
 			break;
 		case 'IntentRequest':
-			$result->response = MorseCode::IntentRequest($request);
+			$result->response = MorseCode::IntentRequest($post);
 			break;
 	}
+	
+	if (isset($post->session->attributes))
+		$result->sessionAttributes = $post->session->attributes;
 	
 	return $result;
 }
