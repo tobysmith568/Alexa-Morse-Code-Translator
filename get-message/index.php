@@ -51,14 +51,14 @@ $fileNames = [
 ob_start();
 
 $total = 0;
-$array = str_split($_GET['text']);
+$array = str_split(strtolower($_GET['text']));
+
 foreach ($array as $char) {
+	error_log($char);
 	if (isset($fileNames[$char])) {
 		$file = "$soundFolder$fileNames[$char]$extension";
 		readfile($file);
 		$total = ($total + filesize($file));
-	}
-	else if ($char === ' ') {
 	}
 }
 

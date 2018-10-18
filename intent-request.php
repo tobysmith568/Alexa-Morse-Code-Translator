@@ -7,14 +7,19 @@ if (str_replace('/', '\\', __FILE__) == str_replace('/', '\\', $_SERVER['SCRIPT_
 
 class IntentRequestBuilder {
 	
+	private $body;	
 	private $result;
 	
 	public function __construct() {
+		$this->body = new stdclass();
+		$this->body->version = '1.0';
+		
 		$this->result = new stdclass();
 	}		
 	
 	public function build() {
-		return $this->result;
+		$this->body->response = $this->result;
+		return $this->body;
 	}		
 	
 	public function addPlainText($text) {

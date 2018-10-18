@@ -72,24 +72,22 @@ function PUT() {
 ///////////////////
 
 function runRequest($post) {
-	$result = new stdclass();
 	
-	$result->version = '1.0';
+	$data = new stdclass();
 	
-	switch ($post->request->type) {
+	switch ($post->request->type) {		
 		case 'LaunchRequest':
-			$result->response = MorseCode::LaunchRequest($post);
-			$result->sessionAttributes->launched = true;
+			$data = MorseCode::LaunchRequest($post);
 			break;
 		case 'IntentRequest':
-			$result->response = MorseCode::IntentRequest($post);
+			$data = MorseCode::IntentRequest($post);
 			break;
 	}
 	
 	if (isset($post->session->attributes))
-		$result->sessionAttributes = $post->session->attributes;
+		$data->sessionAttributes = $post->session->attributes;
 	
-	return $result;
+	return $data;
 }
 
 ///////////////////
