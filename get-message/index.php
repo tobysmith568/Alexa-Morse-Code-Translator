@@ -54,21 +54,18 @@ $total = 0;
 $array = str_split(strtolower($_GET['text']));
 
 foreach ($array as $char) {
-	error_log($char);
 	if (isset($fileNames[$char])) {
 		$file = "$soundFolder$fileNames[$char]$extension";
 		readfile($file);
 		$total = ($total + filesize($file));
 	}
-}
-
-$result = ob_get_contents(); 
+} 
 
 header('Cache-Control: no-cache');
 header('Content-type: audio/mpeg');
 header("Content-length: $total");
 
-echo $result;
+ob_flush();
 
 
 
