@@ -76,6 +76,12 @@ class IntentRequestBuilder {
 		return $this;
 	}
 	
+	public function addSessionData($dataName, $data) {
+		$this->body->sessionAttributes->$dataName = $data;
+		
+		return $this;
+	}
+	
 	private function getImage($smallImage, $largeImage) {
 		$result = new stdclass();
 		$result->smallImageUrl = $smallImage;
